@@ -134,7 +134,7 @@ To create your own example:
 2. Create a new Cargo.toml file with the necessary dependencies:
    ```toml
    [dependencies]
-   instana_opentelemetry_sdk = { path = "../.." }
+   instana_opentelemetry_sdk = "1.0.0"
    opentelemetry = { version = "0.20.0", features = ["trace"] }
    opentelemetry_sdk = { version = "0.20.0", features = ["trace", "rt-tokio"] }
    ```

@@ -4,11 +4,10 @@ version = "1.0.0"
 edition = "2021"
 license = "Apache-2.0"
 publish = true
-description="Instana Opentelemetry Rust SDK"
-
-#[[bin]] # Bin to run the serialize_span
-#name = "serialize_span"
-#path = "src/serialize_span.rs"
+description="This library provides an OpenTelemetry Rust SDK which supports exporter, propagation and serialization. It allows you to send OpenTelemetry trace data to Instana for monitoring and observability."
+repository = "https://github.com/instana/instana-opentelemetry-rust"
+documentation = "https://github.com/instana/instana-opentelemetry-rust"
+homepage = "https://github.com/instana/instana-opentelemetry-rust"
 
 [dependencies]
 bytes = "1.10.1"
