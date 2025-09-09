@@ -1,0 +1,10 @@
+{
+  "settingsInheritedFrom": "whitesource-config/whitesource-config@master",
+  "issueSettings": {
+    "minSeverityLevel": "NONE"
+  },
+  "scanSettings": {
+   "configMode": "LOCAL"
+  }
+}
+
