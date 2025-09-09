@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Matrix Results</title>
+    <style>
+        .matrix-container {
+            margin: 20px 0;
+        }
+        .matrix-visual {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 20px 0;
+            display: inline-block;
+            background-color: #f9f9f9;
+        }
+        .matrix-row {
+            display: flex;
+        }
+        .matrix-cell {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            border: 1px solid #ddd;
+            margin: 2px;
+            background-color: white;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        let lastMatrix = "";
+        
+        async function fetchMatrixResult() {
+            let response = await fetch('/latest_matrix');
+            let result = await response.text();
+            document.getElementById('matrix_display').innerText = result;
+            lastMatrix = result;
+        }
+        
+        setInterval(fetchMatrixResult, 2000); // Refresh every 2 seconds
+        
+        
+        function showVisualMatrix() {
+            if (!lastMatrix || lastMatrix === "No result yet") {
+                alert("No matrix data available yet");
+                return;
+            }
+            
+            const container = document.getElementById('visual_matrix');
+            container.innerHTML = '';
+            
+            // Parse the matrix from the text representation
+            const rows = lastMatrix.trim().split('\n');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'matrix-row';
+                
+                const cells = rows[i].trim().split(' ');
+                for (let j = 0; j < cells.length; j++) {
+                    const cellDiv = document.createElement('div');
+                    cellDiv.className = 'matrix-cell';
+                    cellDiv.textContent = cells[j];
+                    rowDiv.appendChild(cellDiv);
+                }
+                
+                container.appendChild(rowDiv);
+            }
+            
+            container.style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <h1>Matrix Results</h1>
+    <div class="matrix-container">
+        <h3>Raw Matrix Data:</h3>
+        <pre id="matrix_display">Waiting for results...</pre>
+        
+        <button onclick="showVisualMatrix()">Show Visual Matrix</button>
+        
+        <h3>Visual Matrix:</h3>
+        <div id="visual_matrix" class="matrix-visual" style="display: none;"></div>
+    </div>
+</body>
+</html>
+
+

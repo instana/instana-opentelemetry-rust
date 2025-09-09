@@ -1,0 +1,146 @@
+
+#accepted
+[
+    {
+        "d": 0,
+        "data": {
+            "sdk": {
+                "custom": {
+                    "tags": {
+                        "attributes": {
+                            "another.key": "yes"
+                        },
+                        "events": {
+                            "Sub span event": {
+                                "timestamp": 1748785499894,
+                                "value": {}
+                            }
+                        },
+                        "otel": {
+                            "dropped_attributes_count": 0,
+                            "dropped_events_count": 0,
+                            "dropped_links_count": 0,
+                            "scope-key": "scope-value",
+                            "scope.name": "basic",
+                            "scope.version": "1.0"
+                        },
+                        "resource": {
+                            "process.pid": "13081",
+                            "telemetry.sdk.language": "rust",
+                            "telemetry.sdk.name": "opentelemetry",
+                            "telemetry.sdk.version": "0.29.0"
+                        }
+                    }
+                },
+                "name": "Sub operation...",
+                "type": "intermediate"
+            },
+            "service": "basic-instana090-example"
+        },
+        "f": {
+            "e": 13081
+        },
+        "k": 3,
+        "n": "sdk",
+        "p": "0bde81f4ef01cae2",
+        "s": "421ac94d99f94253",
+        "sy": false,
+        "t": "b4011c5777ee1457",
+        "ts": 1748785499894
+    },
+    {
+        "d": 0,
+        "data": {
+            "sdk": {
+                "custom": {
+                    "tags": {
+                        "links": [
+                            {
+                                "attributes": {
+                                    "link.type": "dependency"
+                                },
+                                "s": "421ac94d99f94253",
+                                "t": "b4011c5777ee1457"
+                            }
+                        ],
+                        "otel": {
+                            "dropped_attributes_count": 0,
+                            "dropped_events_count": 0,
+                            "dropped_links_count": 0,
+                            "scope-key": "scope-value",
+                            "scope.name": "basic",
+                            "scope.version": "1.0"
+                        },
+                        "resource": {
+                            "process.pid": "13081",
+                            "telemetry.sdk.language": "rust",
+                            "telemetry.sdk.name": "opentelemetry",
+                            "telemetry.sdk.version": "0.29.0"
+                        }
+                    }
+                },
+                "name": "Main operation with link",
+                "type": "intermediate"
+            },
+            "service": "basic-instana090-example"
+        },
+        "f": {
+            "e": 13081
+        },
+        "k": 3,
+        "n": "sdk",
+        "p": "0bde81f4ef01cae2",
+        "s": "a573a9656415f9e6",
+        "sy": false,
+        "t": "b4011c5777ee1457",
+        "ts": 1748785499894
+    },
+    {
+        "d": 0,
+        "data": {
+            "sdk": {
+                "custom": {
+                    "tags": {
+                        "attributes": {
+                            "another.key": "yes"
+                        },
+                        "events": {
+                            "Nice operation!": {
+                                "timestamp": 1748785499894,
+                                "value": {
+                                    "some.key": 100
+                                }
+                            }
+                        },
+                        "otel": {
+                            "dropped_attributes_count": 0,
+                            "dropped_events_count": 0,
+                            "dropped_links_count": 0,
+                            "scope-key": "scope-value",
+                            "scope.name": "basic",
+                            "scope.version": "1.0"
+                        },
+                        "resource": {
+                            "process.pid": "13081",
+                            "telemetry.sdk.language": "rust",
+                            "telemetry.sdk.name": "opentelemetry",
+                            "telemetry.sdk.version": "0.29.0"
+                        }
+                    }
+                },
+                "name": "Main operation",
+                "type": "intermediate"
+            },
+            "service": "basic-instana090-example"
+        },
+        "f": {
+            "e": 13081
+        },
+        "k": 3,
+        "n": "sdk",
+        "s": "0bde81f4ef01cae2",
+        "sy": false,
+        "t": "b4011c5777ee1457",
+        "ts": 1748785499894
+    }
+]
