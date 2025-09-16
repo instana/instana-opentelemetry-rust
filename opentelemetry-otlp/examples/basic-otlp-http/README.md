@@ -20,6 +20,8 @@ a `SimpleExporter`, this requires making the main function a regular main and
 
 ## Usage
 
+### Using OpenTelemetry Collector
+
 Run the `otel/opentelemetry-collector` container using docker
 and inspect the logs to see the exported telemetry.
 
@@ -35,6 +37,51 @@ On Windows use:
 ```shell
 # From the current directory, run `opentelemetry-collector`
 docker run --rm -it -p 4317:4317 -p 4318:4318 -v "%cd%":/cfg otel/opentelemetry-collector:latest --config=/cfg/otel-collector-config.yaml
+```
+### Using IDOT (Instana Distribution of OpenTelemetry Collector)
+
+As an alternative to the standard OpenTelemetry Collector, you can use IDOT (Instana Distro of OpenTelemetry) as your collector. IDOT provides additional features and integrations with Instana's observability platform.
+
+For installation and configuration instructions for IDOT, please refer to the official IBM documentation:
+[Instana Distribution of OpenTelemetry Collector](https://www.ibm.com/docs/en/instana-observability/latest?topic=collectors-instana-distribution-opentelemetry-collector)
+
+
+## Adding Instana specific configuration
+
+When sending telemetry data to Instana, you need to configure:
+
+1. Instana-specific headers in the exporter
+2. The "host.id" attribute in the resource
+
+### Adding Instana headers to the exporter
+
+```rust
+let mut map = MetadataMap::with_capacity(2);
+map.insert("x-instana-key", "<instana-key>".parse().unwrap());
+map.insert("x-instana-host", "<my-host-id>".parse().unwrap());
+
+let exporter = LogExporter::builder()
+     .with_http()
+     .with_endpoint("http://localhost:24318/v1/logs")
+     .with_headers(headers)
+     .with_protocol(Protocol::HttpBinary)
+     .build()
+     .expect("Failed to create log exporter");
+```
+
+### Adding host.id to the resource
+
+```rust
+let resource = Resource::builder()
+    .with_service_name("my-service")
+    .with_attribute(KeyValue::new("host.id", "<my-host-id>"))
+    .build();
+
+// Then use this resource when creating your provider
+SdkTracerProvider::builder()
+    .with_resource(resource)
+    .with_batch_exporter(exporter)
+    .build()
 ```
 
 Run the app which exports logs, metrics and traces via OTLP to the collector

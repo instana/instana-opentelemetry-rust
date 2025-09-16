@@ -49,6 +49,8 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
 
 ## Usage
 
+### Using OpenTelemetry Collector
+
 Run the `otel/opentelemetry-collector` container using docker
 and inspect the logs to see the exported telemetry.
 
@@ -56,14 +58,59 @@ On Unix based systems use:
 
 ```shell
 # From the current directory, run `opentelemetry-collector`
-docker run --rm -it -p 4317:4317 -p 4318:4318 -v $(pwd):/cfg otel/opentelemetry-collector:latest --config=/cfg/otel-collector-config.yaml
+docker run --rm -it -p 24317:4317 -p 24318:4318 -v $(pwd):/cfg otel/opentelemetry-collector:latest --config=/cfg/otel-collector-config.yaml
 ```
 
 On Windows use:
 
 ```shell
 # From the current directory, run `opentelemetry-collector`
-docker run --rm -it -p 4317:4317 -p 4318:4318 -v "%cd%":/cfg otel/opentelemetry-collector:latest --config=/cfg/otel-collector-config.yaml
+docker run --rm -it -p 24317:4317 -p 24318:4318 -v "%cd%":/cfg otel/opentelemetry-collector:latest --config=/cfg/otel-collector-config.yaml
+```
+
+### Using IDOT (Instana Distribution of OpenTelemetry Collector)
+
+As an alternative to the standard OpenTelemetry Collector, you can use IDOT (Instana Distro of OpenTelemetry) as your collector. IDOT provides additional features and integrations with Instana's observability platform.
+
+For installation and configuration instructions for IDOT, please refer to the official IBM documentation:
+[Instana Distribution of OpenTelemetry Collector](https://www.ibm.com/docs/en/instana-observability/latest?topic=collectors-instana-distribution-opentelemetry-collector)
+
+
+## Adding Instana specific configuration
+
+When sending telemetry data to Instana, you need to configure:
+
+1. Instana-specific headers in the exporter
+2. The "host.id" attribute in the resource
+
+### Adding Instana headers to the exporter
+
+```rust
+let mut map = MetadataMap::with_capacity(2);
+map.insert("x-instana-key", "<instana-key>".parse().unwrap());
+map.insert("x-instana-host", "<my-host-id>".parse().unwrap());
+
+let exporter = SpanExporter::builder()
+    .with_tonic()
+    .with_endpoint("http://localhost:24317")  // Use your IDOT endpoint
+    .with_metadata(map)
+    .build()
+    .expect("Failed to create span exporter");
+```
+
+### Adding host.id to the resource
+
+```rust
+let resource = Resource::builder()
+    .with_service_name("my-service")
+    .with_attribute(KeyValue::new("host.id", "<my-host-id>"))
+    .build();
+
+// Then use this resource when creating your provider
+SdkTracerProvider::builder()
+    .with_resource(resource)
+    .with_batch_exporter(exporter)
+    .build()
 ```
 
 Run the app which exports logs, metrics and traces via OTLP to the collector
@@ -208,4 +255,3 @@ Trace ID:
 Span ID:
 Flags: 0
     {"kind": "exporter", "data_type": "logs", "name": "logging"}
-```
