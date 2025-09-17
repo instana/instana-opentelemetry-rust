@@ -1,6 +1,6 @@
-# Instana Opentelemetry Rust SDK
+# Instana Opentelemetry Rust Exporter
 
-This library provides an OpenTelemetry Rust SDK which supports exporter, propagation and serialization. It allows you to send OpenTelemetry trace data to Instana for monitoring and observability.
+This library provides an Instana Exporter for OpenTelemetry which supports exporter, propagation and serialization. It allows you to send OpenTelemetry trace data to Instana for monitoring and observability.
 
 ## Features
 
