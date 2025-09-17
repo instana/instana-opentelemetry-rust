@@ -15,13 +15,11 @@ The Rust [OpenTelemetry](https://opentelemetry.io/) implementation.
 OpenTelemetry is a collection of tools, APIs, and SDKs used to instrument,
 generate, collect, and export telemetry data (metrics, logs, and traces) for
 analysis in order to understand your software's performance and behavior. You
-can export and analyze them using [Prometheus], [Jaeger], and other
-observability tools.
+can export and analyze them using [Instana] and other observability tools.
 
 *[Supported Rust Versions](#supported-rust-versions)*
 
-[Prometheus]: https://prometheus.io
-[Jaeger]: https://www.jaegertracing.io
+[Instana]: https://www.ibm.com/products/instana
 
 ## Project Status
 
@@ -111,15 +109,8 @@ The following crates are maintained in this repo:
 * [`opentelemetry-appender-tracing`] This crate provides logging appender to
   route logs emitted using the [tracing](https://crates.io/crates/tracing) crate
   to opentelemetry.  
-* [`opentelemetry-jaeger-propagator`] provides context propagation using [jaeger
-  propagation
-  format](https://www.jaegertracing.io/docs/1.18/client-libraries/#propagation-format).
-* [`opentelemetry-prometheus`] provides a pipeline and exporter for sending
-  metrics to [`Prometheus`].
 * [`opentelemetry-semantic-conventions`] provides standard names and semantic
   otel conventions.
-* [`opentelemetry-zipkin`] provides a pipeline and exporter for sending traces
-  to [`Zipkin`].
 
 In addition, there are several other useful crates in the [OTel Rust Contrib
 repo](https://github.com/open-telemetry/opentelemetry-rust-contrib). A lot of
@@ -134,11 +125,6 @@ Registry](https://opentelemetry.io/ecosystem/registry/?language=rust).
 [`opentelemetry-http`]: https://crates.io/crates/opentelemetry-http
 [`opentelemetry-otlp`]: https://crates.io/crates/opentelemetry-otlp
 [`opentelemetry-stdout`]: https://crates.io/crates/opentelemetry-stdout
-[`opentelemetry-jaeger-propagator`]: https://crates.io/crates/opentelemetry-jaeger-propagator
-[`opentelemetry-prometheus`]: https://crates.io/crates/opentelemetry-prometheus
-[`Prometheus`]: https://prometheus.io
-[`opentelemetry-zipkin`]: https://crates.io/crates/opentelemetry-zipkin
-[`Zipkin`]: https://zipkin.io
 [`opentelemetry-semantic-conventions`]: https://crates.io/crates/opentelemetry-semantic-conventions
 [`http`]: https://crates.io/crates/http
 
