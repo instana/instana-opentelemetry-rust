@@ -2,7 +2,8 @@ use opentelemetry::trace::{TraceContextExt, Tracer};
 use opentelemetry::KeyValue;
 use opentelemetry::{global, InstrumentationScope};
 use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
-use opentelemetry_otlp::{LogExporter, MetricExporter, SpanExporter};
+use opentelemetry_otlp::tonic_types::metadata::MetadataMap;
+use opentelemetry_otlp::{LogExporter, MetricExporter, SpanExporter, WithExportConfig, WithTonicConfig};
 use opentelemetry_sdk::logs::SdkLoggerProvider;
 use opentelemetry_sdk::metrics::SdkMeterProvider;
 use opentelemetry_sdk::trace::SdkTracerProvider;
@@ -19,14 +20,21 @@ fn get_resource() -> Resource {
         .get_or_init(|| {
             Resource::builder()
                 .with_service_name("basic-otlp-example-grpc")
+                .with_attribute(KeyValue::new("host.id", "my-host-id"))
                 .build()
         })
         .clone()
 }
 
 fn init_traces() -> SdkTracerProvider {
+    let mut map = MetadataMap::with_capacity(2);
+    map.insert("x-instana-key", "instana-key".parse().unwrap());
+    map.insert("x-instana-host", "my-host-id".parse().unwrap());
+
     let exporter = SpanExporter::builder()
         .with_tonic()
+        .with_endpoint("http://localhost:24317")
+        .with_metadata(map)
         .build()
         .expect("Failed to create span exporter");
     SdkTracerProvider::builder()
@@ -36,8 +44,14 @@ fn init_traces() -> SdkTracerProvider {
 }
 
 fn init_metrics() -> SdkMeterProvider {
+    let mut map = MetadataMap::with_capacity(2);
+    map.insert("x-instana-key", "instana-key".parse().unwrap());
+    map.insert("x-instana-host", "my-host-id".parse().unwrap());
+
     let exporter = MetricExporter::builder()
         .with_tonic()
+        .with_endpoint("http://localhost:24317")
+        .with_metadata(map)
         .build()
         .expect("Failed to create metric exporter");
 
@@ -48,8 +62,14 @@ fn init_metrics() -> SdkMeterProvider {
 }
 
 fn init_logs() -> SdkLoggerProvider {
+    let mut map = MetadataMap::with_capacity(2);
+    map.insert("x-instana-key", "instana-key".parse().unwrap());
+    map.insert("x-instana-host", "my-host-id".parse().unwrap());
+
     let exporter = LogExporter::builder()
         .with_tonic()
+        .with_endpoint("http://localhost:24317")
+        .with_metadata(map)
         .build()
         .expect("Failed to create log exporter");
 
