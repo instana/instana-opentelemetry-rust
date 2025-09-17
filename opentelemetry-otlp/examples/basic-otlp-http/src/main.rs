@@ -21,6 +21,7 @@ fn get_resource() -> Resource {
         .get_or_init(|| {
             Resource::builder()
                 .with_service_name("basic-otlp-example-http")
+                .with_attribute(KeyValue::new("host.id", "my-host-id"))
                 .build()
         })
         .clone()
