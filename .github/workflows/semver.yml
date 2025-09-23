@@ -1,0 +1,29 @@
+name: Semver compliance
+env:
+  CI: true
+permissions:
+  contents: read
+on:
+  pull_request:
+    types: [ labeled, synchronize, opened, reopened ]
+jobs:
+  semver-compliance: # This job uses the latest published crate as baseline for comparison.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: ${{ github.event.label.name == 'semver-check' || contains(github.event.pull_request.labels.*.name, 'semver-check') }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          submodules: true
+      - name: Install stable
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9
+        with:
+          toolchain: stable
+          components: rustfmt
+      - name: cargo-semver-checks
+        uses: obi1kenobi/cargo-semver-checks-action@5b298c9520f7096a4683c0bd981a7ac5a7e249ae # v2.8
