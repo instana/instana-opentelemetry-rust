@@ -1,10 +1,22 @@
 /.vscode/
+
 /target/
 */target/
+
+/debug/
+*/debug
+
 **/*.rs.bk
+
 Cargo.lock
 /.idea/
 
 .cosine
+
+# macOS specific files
+**/.DS_Store
+
+# MSVC Windows builds of rustc generate these, which store debugging information
+*.pdb
 
 opentelemetry-otlp/tests/integration_test/result.json
