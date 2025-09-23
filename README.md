@@ -1,176 +1,198 @@
-# Instana Opentelemetry Rust SDK
+# OpenTelemetry Rust
 
-This library provides an OpenTelemetry Rust SDK which supports exporter, propagation and serialization. It allows you to send OpenTelemetry trace data to Instana for monitoring and observability.
+The Rust [OpenTelemetry](https://opentelemetry.io/) implementation.
 
-## Features
+[![Crates.io: opentelemetry](https://img.shields.io/crates/v/opentelemetry.svg)](https://crates.io/crates/opentelemetry)
+[![LICENSE](https://img.shields.io/crates/l/opentelemetry)](./LICENSE)
+[![GitHub Actions CI](https://github.com/open-telemetry/opentelemetry-rust/workflows/CI/badge.svg)](https://github.com/open-telemetry/opentelemetry-rust/actions?query=workflow%3ACI+branch%3Amain)
+[![Documentation](https://docs.rs/opentelemetry/badge.svg)](https://docs.rs/opentelemetry)
+[![codecov](https://codecov.io/gh/open-telemetry/opentelemetry-rust/branch/main/graph/badge.svg)](https://codecov.io/gh/open-telemetry/opentelemetry-rust)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/open-telemetry/opentelemetry-rust/badge)](https://scorecard.dev/viewer/?uri=github.com/open-telemetry/opentelemetry-rust)
+[![Slack](https://img.shields.io/badge/slack-@cncf/otel/rust-brightgreen.svg?logo=slack)](https://cloud-native.slack.com/archives/C03GDP0H023)
 
-- Export OpenTelemetry spans to Instana
-- Propagate trace context using Instana headers
-- Customize exporter configuration
-- Support for resource attributes
-- Composite propagator support for multi-format propagation
-- Working examples demonstrating distributed tracing
+## Overview
 
-## Installation
+OpenTelemetry is a collection of tools, APIs, and SDKs used to instrument,
+generate, collect, and export telemetry data (metrics, logs, and traces) for
+analysis in order to understand your software's performance and behavior. You
+can export and analyze them using [Instana] and other observability tools.
 
-Add the following to your `Cargo.toml`:
+*[Supported Rust Versions](#supported-rust-versions)*
 
-```toml
-[dependencies]
-instana_opentelemetry_sdk = "1.0.0"
-```
+[Instana]: https://www.ibm.com/products/instana
 
-## Usage
+## Project Status
 
-### Exporter
+The table below summarizes the overall status of each component. Some components
+include unstable features, which are documented in their respective crate
+documentation.
 
-```rust
-use instana_opentelemetry_sdk::exporter::exporter::{Exporter, Options};
-use opentelemetry_sdk::trace::SpanExporter;
-use opentelemetry_sdk::Resource;
-use opentelemetry::KeyValue;
+| Signal/Component      | Overall Status     |
+| --------------------  | ------------------ |
+| Context               | Beta               |
+| Baggage               | RC                 |
+| Propagators           | Beta               |
+| Logs-API              | Stable*            |
+| Logs-SDK              | Stable             |
+| Logs-OTLP Exporter    | RC                 |
+| Logs-Appender-Tracing | Stable             |
+| Metrics-API           | Stable             |
+| Metrics-SDK           | Stable             |
+| Metrics-OTLP Exporter | RC                 |
+| Traces-API            | Beta               |
+| Traces-SDK            | Beta               |
+| Traces-OTLP Exporter  | Beta               |
 
-// Create exporter with builder pattern (recommended approach)
-let exporter = Exporter::builder()
-    .build()
-    .expect("Failed to create instana exporter");
+*OpenTelemetry Rust is not introducing a new end user callable Logging API.
+Instead, it provides [Logs Bridge
+API](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/logs/api.md),
+that allows one to write log appenders that can bridge existing logging
+libraries to the OpenTelemetry log data model. The following log appenders are
+available:
 
-// Create with custom options
-let options = Options {
-    endpoint: format!(
-                "http://{}:{}/com.instana.plugin.generic.rawtrace",
-                host, port
-            ),
-    hostname: "my-host".to_string(),
-    service: "my-service".to_string(),
-    ..Default::default()
-};
+* [opentelemetry-appender-log](opentelemetry-appender-log/README.md)
+* [opentelemetry-appender-tracing](opentelemetry-appender-tracing/README.md)
 
-// Create exporter with custom options and service
-let exporter = Exporter::builder()
-    .with_options(options)
-    .with_service(Resource::new(vec![KeyValue::new("service.name", "my-service")]))
-    .build()
-    .expect("Failed to create instana exporter");
-```
+If you already use the logging APIs from above, continue to use them, and use
+the appenders above to bridge the logs to OpenTelemetry. If you are using a
+library not listed here, feel free to contribute a new appender for the same.
 
-### Propagator
+If you are starting fresh, we recommend using
+[tracing](https://github.com/tokio-rs/tracing) as your logging API. It supports
+structured logging and is actively maintained. `OpenTelemetry` itself uses
+`tracing` for its internal logging.
 
-#### Basic Instana Propagator
+Project versioning information and stability guarantees can be found
+[here](VERSIONING.md).
 
-```rust
-use instana_opentelemetry_sdk::propagator::Propagator;
-use opentelemetry::global;
-use opentelemetry::propagation::TextMapPropagator;
+## Getting Started
 
-// Create and register the Instana propagator
-let propagator = Propagator::new();
-global::set_text_map_propagator(propagator);
-```
+If you are new to OpenTelemetry, start with the [Stdout
+Example](./opentelemetry-stdout/examples/basic.rs). This example demonstrates
+how to use OpenTelemetry for logs, metrics, and traces, and display
+telemetry data on your console.
 
-#### Composite Propagator
+For those using OTLP, the recommended OpenTelemetry Exporter for production
+scenarios, refer to the [OTLP Example -
+HTTP](./opentelemetry-otlp/examples/basic-otlp-http/README.md) and the [OTLP
+Example - gRPC](./opentelemetry-otlp/examples/basic-otlp/README.md).
 
-The composite propagator allows you to use multiple propagation formats simultaneously:
+Additional examples for various integration patterns can be found in the
+[examples](./examples) directory.
 
-```rust
-use instana_opentelemetry_sdk::composite::CompositePropagator;
-use instana_opentelemetry_sdk::propagator::Propagator;
-use opentelemetry::global;
-use opentelemetry::propagation::{TextMapPropagator, TraceContextPropagator};
+## Overview of crates
 
-// Create a composite propagator with both Instana and W3C TraceContext formats
-let propagators: Vec<Box<dyn TextMapPropagator + Send + Sync>> = vec![
-    Box::new(Propagator::new()),
-    Box::new(TraceContextPropagator::new()),
-];
+The following crates are maintained in this repo:
 
-let composite_propagator = CompositePropagator::new(propagators);
-global::set_text_map_propagator(composite_propagator);
-```
+* [`opentelemetry`] This is the OpenTelemetry API crate, and is the crate
+  required to instrument libraries and applications. It contains Context API,
+  Baggage API, Propagators API, Logging Bridge API, Metrics API, and Tracing
+  API.
+* [`opentelemetry-sdk`] This is the OpenTelemetry SDK crate, and contains the
+  official OpenTelemetry SDK implementation. It contains Logging SDK, Metrics
+  SDK, and Tracing SDK. It also contains propagator implementations.
+* [`opentelemetry-otlp`] - exporter to send telemetry (logs, metrics and traces)
+  in the [OTLP
+  format](https://github.com/open-telemetry/opentelemetry-specification/tree/main/specification/protocol)
+  to an endpoint accepting OTLP. This could be the [OTel
+  Collector](https://github.com/open-telemetry/opentelemetry-collector),
+  telemetry backends like [Jaeger](https://www.jaegertracing.io/),
+  [Prometheus](https://prometheus.io/docs/prometheus/latest/feature_flags/#otlp-receiver)
+  or [vendor specific endpoints](https://opentelemetry.io/ecosystem/vendors/).
+* [`opentelemetry-stdout`] exporter for sending logs, metrics and traces to
+  stdout, for learning/debugging purposes.  
+* [`opentelemetry-http`] This crate contains utility functions to help with
+  exporting telemetry, propagation, over [`http`].
+* [`opentelemetry-appender-log`] This crate provides logging appender to route
+  logs emitted using the [log](https://docs.rs/log/latest/log/) crate to
+  opentelemetry.
+* [`opentelemetry-appender-tracing`] This crate provides logging appender to
+  route logs emitted using the [tracing](https://crates.io/crates/tracing) crate
+  to opentelemetry.  
+* [`opentelemetry-semantic-conventions`] provides standard names and semantic
+  otel conventions.
 
-## Configuration
+In addition, there are several other useful crates in the [OTel Rust Contrib
+repo](https://github.com/open-telemetry/opentelemetry-rust-contrib). A lot of
+crates maintained outside OpenTelemetry owned repos can be found in the
+[OpenTelemetry
+Registry](https://opentelemetry.io/ecosystem/registry/?language=rust).
 
-### Environment Variables
+[`opentelemetry`]: https://crates.io/crates/opentelemetry
+[`opentelemetry-sdk`]: https://crates.io/crates/opentelemetry-sdk
+[`opentelemetry-appender-log`]: https://crates.io/crates/opentelemetry-appender-log
+[`opentelemetry-appender-tracing`]: https://crates.io/crates/opentelemetry-appender-tracing
+[`opentelemetry-http`]: https://crates.io/crates/opentelemetry-http
+[`opentelemetry-otlp`]: https://crates.io/crates/opentelemetry-otlp
+[`opentelemetry-stdout`]: https://crates.io/crates/opentelemetry-stdout
+[`opentelemetry-semantic-conventions`]: https://crates.io/crates/opentelemetry-semantic-conventions
+[`http`]: https://crates.io/crates/http
 
-The exporter uses the following environment variables:
+## Supported Rust Versions
 
-- `INSTANA_AGENT_HOST`: The hostname of the Instana agent (default: "localhost")
-- `INSTANA_AGENT_PORT`: The port of the Instana agent (default: "42699")
+OpenTelemetry is built against the latest stable release. The minimum supported
+version is 1.75. The current OpenTelemetry version is not guaranteed to build
+on Rust versions earlier than the minimum supported version.
 
-### Options
+The current stable Rust compiler and the three most recent minor versions
+before it will always be supported. For example, if the current stable compiler
+version is 1.49, the minimum supported version will not be increased past 1.46,
+three minor versions prior. Increasing the minimum supported compiler version
+is not considered a semver breaking change as long as doing so complies with
+this policy.
 
-The `Options` struct provides configuration options for `Exporter`:
+## Contributing
 
-| Field | Description | Default |
-|-------|-------------|---------|
-| `endpoint` | The URL endpoint for the Instana agent | `http://{INSTANA_AGENT_HOST}:{INSTANA_AGENT_PORT}/com.instana.plugin.generic.rawtrace` |
-| `hostname` | The hostname to report | Empty string |
-| `source_address` | The source address to report | Empty string |
-| `service` | The service name to report | Empty string |
-| `headers` | Additional HTTP headers to include in requests | `Content-Type: application/json` |
+See the [contributing file](CONTRIBUTING.md).
 
-## Propagation
+The Rust special interest group (SIG) meets weekly on Tuesdays at 9 AM Pacific
+Time. The meeting is subject to change depending on contributors' availability.
+Check the [OpenTelemetry community
+calendar](https://github.com/open-telemetry/community?tab=readme-ov-file#calendar)
+for specific dates and for Zoom meeting links. "OTel Rust SIG" is the name of
+meeting for this group.
 
-### Instana Headers
+Meeting notes are available as a public [Google
+doc](https://docs.google.com/document/d/12upOzNk8c3SFTjsL6IRohCWMgzLKoknSCOOdMakbWo4/edit).
+If you have trouble accessing the doc, please get in touch on
+[Slack](https://cloud-native.slack.com/archives/C03GDP0H023).
 
-The Instana propagator handles the following HTTP headers:
+The meeting is open for all to join. We invite everyone to join our meeting,
+regardless of your experience level. Whether you're a seasoned OpenTelemetry
+developer, just starting your journey, or simply curious about the work we do,
+you're more than welcome to participate!
 
-- `X-INSTANA-T`: The trace ID (16 or 32 hex characters)
-- `X-INSTANA-S`: The parent span ID (16 hex characters)
-- `X-INSTANA-L`: The sampling level (0 or 1)
+## Approvers and Maintainers
 
-These headers are translated to and from the OpenTelemetry `SpanContext`.
+### Maintainers
 
-### Header Details
+* [Cijo Thomas](https://github.com/cijothomas), Microsoft
+* [Harold Dost](https://github.com/hdost)
+* [Lalit Kumar Bhasin](https://github.com/lalitb), Microsoft
+* [Utkarsh Umesan Pillai](https://github.com/utpilla), Microsoft
+* [Zhongyang Wu](https://github.com/TommyCpp)
 
-- **X-INSTANA-T (trace ID)**: A string of either 16 or 32 characters from the alphabet `0-9a-f`, representing either a 64 bit or 128 bit ID. If the propagator receives a value shorter than 32 characters when extracting headers, it will left-pad the string with "0" to length 32.
+For more information about the maintainer role, see the [community repository](https://github.com/open-telemetry/community/blob/main/guides/contributor/membership.md#maintainer).
 
-- **X-INSTANA-S (parent span ID)**: A string of 16 characters from the alphabet `0-9a-f`, representing a 64 bit ID.
+### Approvers
 
-- **X-INSTANA-L (sampling level)**: The only valid values are `1` (sampled) and `0` (not sampled).
+* [Anton Grübel](https://github.com/gruebel), Baz
+* [Björn Antonsson](https://github.com/bantonsson), Datadog
+* [Scott Gerring](https://github.com/scottgerring), Datadog
+* [Shaun Cox](https://github.com/shaun-cox), Microsoft
 
-## Examples
+For more information about the approver role, see the [community repository](https://github.com/open-telemetry/community/blob/main/guides/contributor/membership.md#approver).
 
-The project includes working examples that demonstrate how to use the Instana exporter in real-world scenarios:
+### Emeritus
 
-### Matrix Multiplication and Matrix Printer
+* [Dirkjan Ochtman](https://github.com/djc)
+* [Isobel Redelmeier](https://github.com/iredelmeier)
+* [Jan Kühle](https://github.com/frigus02)
+* [Julian Tescher](https://github.com/jtescher)
+* [Mike Goldsmith](https://github.com/MikeGoldsmith)
 
-Two interconnected services that demonstrate distributed tracing:
-- Matrix Multiplication service performs calculations and sends results to the Matrix Printer
-- Matrix Printer service receives and displays the results
-- Trace context is propagated between services using Instana headers
+For more information about the emeritus role, see the [community repository](https://github.com/open-telemetry/community/blob/main/guides/contributor/membership.md#emeritus-maintainerapprovertriager).
 
-To run the examples:
+### Thanks to all the people who have contributed
 
-```bash
-cd examples
-./run_servers.sh
-```
-
-Then visit:
-- Matrix Multiplication UI: http://127.0.0.1:8081
-- Matrix Printer UI: http://127.0.0.1:8083
-
-For more details, see the [Examples Documentation](docs/examples.md).
-
-## Architecture
-
-### Components
-
-- **Exporter**: Sends spans to Instana
-- **Propagator**: Handles context propagation using Instana headers
-- **CompositePropagator**: Allows using multiple propagation formats simultaneously
-- **Serializer**: Converts OpenTelemetry spans to Instana's format
-- **SpanData**: Extensions for working with OpenTelemetry span data
-
-### Serialization
-
-The exporter includes several components for serializing OpenTelemetry spans to Instana's format:
-
-- **HttpBodyWrapper**: Provides methods for building JSON payloads
-- **serialize_span**: Converts OpenTelemetry spans to Instana's format
-- **SpanData Extensions**: Extends `SpanData` with methods for accessing span data
-
-## License
-
-Apache-2.0
+[![contributors](https://contributors-img.web.app/image?repo=open-telemetry/opentelemetry-rust)](https://github.com/open-telemetry/opentelemetry-rust/graphs/contributors)

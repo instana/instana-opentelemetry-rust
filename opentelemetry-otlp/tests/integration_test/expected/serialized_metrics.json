@@ -1,0 +1,95 @@
+{
+  "resourceMetrics": [
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "service.name",
+            "value": {
+              "stringValue": "metrics-integration-test"
+            }
+          }
+        ],
+        "droppedAttributesCount": 0
+      },
+      "scopeMetrics": [
+        {
+          "scope": {
+            "name": "meter",
+            "version": "",
+            "attributes": [],
+            "droppedAttributesCount": 0
+          },
+          "metrics": [
+            {
+              "name": "counter_u64",
+              "description": "",
+              "unit": "",
+              "metadata": [],
+              "sum": {
+                "dataPoints": [
+                  {
+                    "attributes": [
+                      {
+                        "key": "mykey1",
+                        "value": {
+                          "stringValue": "myvalue1"
+                        }
+                      },
+                      {
+                        "key": "mykey2",
+                        "value": {
+                          "stringValue": "myvalue2"
+                        }
+                      }
+                    ],
+                    "startTimeUnixNano": "1734094309366798000",
+                    "timeUnixNano": "1734094317871514000",
+                    "exemplars": [],
+                    "flags": 0
+                  }
+                ],
+                "aggregationTemporality": 2,
+                "isMonotonic": true
+              }
+            },
+            {
+              "name": "example_histogram",
+              "description": "",
+              "unit": "",
+              "metadata": []
+            },
+            {
+              "name": "example_up_down_counter",
+              "description": "",
+              "unit": "",
+              "metadata": [],
+              "sum": {
+                "dataPoints": [
+                  {
+                    "attributes": [
+                      {
+                        "key": "mykey5",
+                        "value": {
+                          "stringValue": "myvalue5"
+                        }
+                      }
+                    ],
+                    "startTimeUnixNano": "1734094309366941000",
+                    "timeUnixNano": "1734094317871548000",
+                    "exemplars": [],
+                    "flags": 0
+                  }
+                ],
+                "aggregationTemporality": 2,
+                "isMonotonic": false
+              }
+            }
+          ],
+          "schemaUrl": ""
+        }
+      ],
+      "schemaUrl": ""
+    }
+  ]
+}
