@@ -4597,20 +4597,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tracing-grpc"
-version = "0.1.0"
-dependencies = [
- "opentelemetry 0.30.0",
- "opentelemetry-stdout",
- "opentelemetry_sdk 0.30.0",
- "prost 0.14.1",
- "tokio",
- "tonic 0.14.2",
- "tonic-prost",
- "tonic-prost-build",
-]
-
-[[package]]
 name = "tracing-http-propagator"
 version = "0.1.0"
 dependencies = [
