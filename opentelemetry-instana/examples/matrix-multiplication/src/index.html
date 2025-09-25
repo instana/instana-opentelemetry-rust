@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Matrix Multiplication</title>
+    <style>
+        .matrix-container {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .matrix {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 0 10px;
+            display: inline-block;
+        }
+        .matrix-row {
+            display: flex;
+        }
+        .matrix-cell {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+        }
+        .operator {
+            font-size: 24px;
+            margin: 0 10px;
+        }
+        .result-matrix {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 0 10px;
+            display: none;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        async function multiplyMatrices() {
+            let matrixA = [
+                [parseInt(document.getElementById("a00").value), parseInt(document.getElementById("a01").value), parseInt(document.getElementById("a02").value)],
+                [parseInt(document.getElementById("a10").value), parseInt(document.getElementById("a11").value), parseInt(document.getElementById("a12").value)],
+                [parseInt(document.getElementById("a20").value), parseInt(document.getElementById("a21").value), parseInt(document.getElementById("a22").value)]
+            ];
+
+            let matrixB = [
+                [parseInt(document.getElementById("b00").value), parseInt(document.getElementById("b01").value), parseInt(document.getElementById("b02").value)],
+                [parseInt(document.getElementById("b10").value), parseInt(document.getElementById("b11").value), parseInt(document.getElementById("b12").value)],
+                [parseInt(document.getElementById("b20").value), parseInt(document.getElementById("b21").value), parseInt(document.getElementById("b22").value)]
+            ];
+
+            let response = await fetch("http://127.0.0.1:8081/multiply", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ a: matrixA, b: matrixB })
+            });
+
+            let result = await response.json();
+            document.getElementById("result").innerText = JSON.stringify(result.result);
+            
+            // Store the result for display
+            window.matrixResult = result.result;
+            
+            // Enable the show results button
+            document.getElementById("showResultsBtn").disabled = false;
+        }
+        
+        function showResults() {
+            if (!window.matrixResult) {
+                alert("Please multiply matrices first!");
+                return;
+            }
+            
+            // Instead of showing results locally, open the matrix-printer application
+            window.open('http://127.0.0.1:8083/', '_blank');
+        }
+    </script>
+</head>
+<body>
+    <h1>Matrix Multiplication</h1>
+    
+    <div class="matrix-container">
+        <div>
+            <h3>Matrix A:</h3>
+            <div class="matrix">
+                <div class="matrix-row">
+                    <input id="a00" value="1"> <input id="a01" value="2"> <input id="a02" value="3">
+                </div>
+                <div class="matrix-row">
+                    <input id="a10" value="4"> <input id="a11" value="5"> <input id="a12" value="6">
+                </div>
+                <div class="matrix-row">
+                    <input id="a20" value="7"> <input id="a21" value="8"> <input id="a22" value="9">
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <h3>Matrix B:</h3>
+            <div class="matrix">
+                <div class="matrix-row">
+                    <input id="b00" value="9"> <input id="b01" value="8"> <input id="b02" value="7">
+                </div>
+                <div class="matrix-row">
+                    <input id="b10" value="6"> <input id="b11" value="5"> <input id="b12" value="4">
+                </div>
+                <div class="matrix-row">
+                    <input id="b20" value="3"> <input id="b21" value="2"> <input id="b22" value="1">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <button onclick="multiplyMatrices()">Multiply Matrices</button>
+        <button id="showResultsBtn" onclick="showResults()" disabled>Show Results in Matrix Printer</button>
+    </div>
+    
+    <h3>Raw Result:</h3>
+    <pre id="result"></pre>
+</body>
+</html>

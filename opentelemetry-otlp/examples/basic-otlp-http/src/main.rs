@@ -4,7 +4,7 @@ use opentelemetry::{
     InstrumentationScope, KeyValue,
 };
 use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
-use opentelemetry_otlp::WithExportConfig;
+use opentelemetry_otlp::{WithExportConfig, WithHttpConfig};
 use opentelemetry_otlp::{LogExporter, MetricExporter, Protocol, SpanExporter};
 use opentelemetry_sdk::Resource;
 use opentelemetry_sdk::{
@@ -20,15 +20,22 @@ fn get_resource() -> Resource {
     RESOURCE
         .get_or_init(|| {
             Resource::builder()
-                .with_service_name("basic-otlp-example-grpc")
+                .with_service_name("basic-otlp-example-http")
+                .with_attribute(KeyValue::new("host.id", "my-host-id"))
                 .build()
         })
         .clone()
 }
 
 fn init_logs() -> SdkLoggerProvider {
+    let mut headers = std::collections::HashMap::new();
+    headers.insert("x-instana-key".to_string(), "<instana-key>".to_string());
+    headers.insert("x-instana-host".to_string(), "<my-host-id>".to_string());
+
     let exporter = LogExporter::builder()
         .with_http()
+        .with_endpoint("http://localhost:24318/v1/logs")
+        .with_headers(headers)
         .with_protocol(Protocol::HttpBinary)
         .build()
         .expect("Failed to create log exporter");
@@ -40,8 +47,14 @@ fn init_logs() -> SdkLoggerProvider {
 }
 
 fn init_traces() -> SdkTracerProvider {
+    let mut headers = std::collections::HashMap::new();
+    headers.insert("x-instana-key".to_string(), "<instana-key>".to_string());
+    headers.insert("x-instana-host".to_string(), "<my-host-id>".to_string());
+
     let exporter = SpanExporter::builder()
         .with_http()
+        .with_endpoint("http://localhost:24318/v1/traces")
+        .with_headers(headers)
         .with_protocol(Protocol::HttpBinary) //can be changed to `Protocol::HttpJson` to export in JSON format
         .build()
         .expect("Failed to create trace exporter");
@@ -53,8 +66,14 @@ fn init_traces() -> SdkTracerProvider {
 }
 
 fn init_metrics() -> SdkMeterProvider {
+    let mut headers = std::collections::HashMap::new();
+    headers.insert("x-instana-key".to_string(), "<instana-key>".to_string());
+    headers.insert("x-instana-host".to_string(), "<my-host-id>".to_string());
+    
     let exporter = MetricExporter::builder()
         .with_http()
+        .with_endpoint("http://localhost:24318/v1/metrics")
+        .with_headers(headers)
         .with_protocol(Protocol::HttpBinary) //can be changed to `Protocol::HttpJson` to export in JSON format
         .build()
         .expect("Failed to create metric exporter");
