@@ -87,6 +87,9 @@ cargo install --path <path-to-the-root-of-source>
 
 The examples in opentelemetry-instana folder show how to use instana opentelemetry exporter to send trace data to Instana. See details in [examples/README.md](./opentelemetry-instana/docs/examples.md).
 
+### Try examples for using IDOT (Instana Distribution of OpenTelemetry Collector)
+
+Examples are also provided for sending trace data through IDOT (Instana Distribution of OpenTelemetry Collector) with OpenTelemetry Rust SDK. See [base-otlp on IDOT](./opentelemetry-otlp/examples/basic-otlp/README.md) and [basic-otlp-http on IDOT](./opentelemetry-otlp/examples/basic-otlp-http/README.md) for more details.
 
 ## Overview of crates
 
