@@ -2,10 +2,9 @@
 
 ## Overview
 
-Instana OpenTelemetry Rust is based on Open Source [OpenTelemetry Rust](https://github.com/open-telemetry/opentelemetry-rust). It provides an OpenTelemetry implementation which focuses on supporting Instana OpenTelemetry and IBM platforms(S390X Linux, PowerPC Linux, AIX) as well as other platforms(Linux x64/ARM64 and Windows).
+Instana OpenTelemetry Rust is based on Open Source [OpenTelemetry Rust](https://github.com/open-telemetry/opentelemetry-rust). It provides an OpenTelemetry implementation which focuses on supporting Instana OpenTelemetry and IBM platforms (S390X Linux, PowerPC Linux, AIX) as well as other platforms (Linux x64/ARM64 and Windows).
 
-It includes standard features which provide a collection of tools, APIs, and SDKs used to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) for
-analysis in order to understand your software's performance and behavior.
+It includes standard features which provide a collection of tools, APIs, and SDKs used to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) for analysis in order to understand your software's performance and behavior.
 
 In addition to standard features of OpenTelemetry Rust, Instana OpenTelemetry Rust also provides Instana OpenTelemetry Rust SDK which supports exporter, propagation and serialization. It allows you to send OpenTelemetry trace data to Instana for monitoring and observability. See [Instana Opentelemetry Rust SDK](./opentelemetry-instana/README.md) for more details.
 
@@ -54,19 +53,19 @@ structured logging and is actively maintained. `OpenTelemetry` itself uses
 ## Getting Started
 
 ### Download and Build
-Instana OpenTelemetry Rust is available in source as tar.gz or zip file which can be downloaded from https://github.com/instana/instana-opentelemetry-rust/releases.
+The Instana OpenTelemetry Rust is available in source as `tar.gz` or `zip` file which can be downloaded from [releases](https://github.com/instana/instana-opentelemetry-rust/releases).
 
 Before building from source, make sure the following tools are installed:
  - Rust 1.86 or above (Note: Only Rust 1.86 is tested on AIX)
  - gcc/g++ 13.0.0 (or above) (Linux, AIX), set environment variable `CC` to `gcc` and `CXX` to `g++`
- - openssl develop package (Linux, AIX), set environment variable `OPENSSL_DIR` and `OPENSSL_LIB_DIR` to point to the openssl instalation directory and openssl library directory respectively.
+ - openssl develop package (Linux, AIX), set environment variable `OPENSSL_DIR` and `OPENSSL_LIB_DIR` to point to the openssl installation directory and openssl library directory respectively.
 
 To build everything, run:
 ```
 cargo build --release
 ```
 
-### Use the crates
+### Using the crates
 
 There are two ways to use the crates:
 
@@ -83,11 +82,11 @@ for example:
 cargo install --path <path-to-the-root-of-source>
 ```
 
-### Try examples provided in opentelemetry-instana
+### Examples provided in opentelemetry-instana
 
 The examples in opentelemetry-instana folder show how to use instana opentelemetry exporter to send trace data to Instana. See details in [examples/README.md](./opentelemetry-instana/docs/examples.md).
 
-### Try examples for using IDOT (Instana Distribution of OpenTelemetry Collector)
+### Examples for using IDOT (Instana Distribution of OpenTelemetry Collector)
 
 Examples are also provided for sending trace data through IDOT (Instana Distribution of OpenTelemetry Collector) with OpenTelemetry Rust SDK. See [base-otlp on IDOT](./opentelemetry-otlp/examples/basic-otlp/README.md) and [basic-otlp-http on IDOT](./opentelemetry-otlp/examples/basic-otlp-http/README.md) for more details.
 
@@ -95,7 +94,7 @@ Examples are also provided for sending trace data through IDOT (Instana Distribu
 
 The following crates are maintained in this repo:
 
-* [`opentelemtry-instana`] This is the Instana Opentelemetry Rust SDK
+* [`opentelemetry-instana`] This is the Instana Opentelemetry Rust SDK
    which supports exporter, propagation and serialization. It allows you to send
    OpenTelemetry trace data to Instana for monitoring and observability
 * [`opentelemetry`] This is the OpenTelemetry API crate, and is the crate
