@@ -46,8 +46,12 @@ async fn matrix_result_api(
     let _headers = req.headers();
     let parent_context = propagator.extract(&extractor);
 
-    let tracer = global::tracer("http_client_tracer");
-    let mut span = tracer.start_with_context("span_with_propgated_parent", &parent_context);
+    let tracer = global::tracer("matrix-multiplication");
+    let mut span = tracer
+            .span_builder("span_with_propgated_parent")
+            .with_kind(opentelemetry::trace::SpanKind::Server)
+            .start_with_context(&tracer, &parent_context);
+
     span.set_attribute(KeyValue::new("http.method", "GET"));
     span.set_attribute(KeyValue::new(
         "http.url",
@@ -82,7 +86,7 @@ fn get_resource() -> Resource {
     RESOURCE
         .get_or_init(|| {
             Resource::builder()
-                .with_service_name("matrix-printer_using_propgated_context")
+                .with_service_name("matrix_printer_using_propgated_context")
                 .with_attribute(KeyValue::new("process.pid", std::process::id() as i64))
                 .build()
         })

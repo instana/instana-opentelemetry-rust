@@ -73,7 +73,10 @@ let provider = global::set_tracer_provider(provider);
 let tracer = provider.tracer("my-service");
 
 // Create a span
-let span = tracer.start("my-operation");
+let span = tracer
+    .span_builder("my-operation")
+    .with_kind(opentelemetry::trace::SpanKind::Server)
+    .start(&tracer);
 let _guard = span.enter();
 
 // Your application code here

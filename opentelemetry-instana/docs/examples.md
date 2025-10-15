@@ -102,7 +102,10 @@ Each example follows a similar structure:
 3. **Creating Spans**:
    ```rust
    let tracer = global::tracer("tracer-name");
-   let mut span = tracer.start("span-name");
+   let mut span = tracer
+           .span_builder("span-name")
+           .with_kind(opentelemetry::trace::SpanKind::Server)
+           .start(&tracer);
    span.set_attribute(KeyValue::new("attribute.name", "value"));
    // ... perform operations ...
    span.end();

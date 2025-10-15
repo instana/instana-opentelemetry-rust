@@ -55,12 +55,17 @@ async fn multiply_matrices_api(matrix_data: web::Json<MatrixInput>) -> impl Resp
         .collect::<Vec<_>>()
         .join("\n");
 
-    let tracer = global::tracer("http_client_tracer");
-    let mut span = tracer.start("outgoing_http_request_tracestate");
+    let tracer = global::tracer("matrix-multiplication");
+
+    let mut span = tracer
+            .span_builder("outgoing_http_request_tracestate")
+            .with_kind(opentelemetry::trace::SpanKind::Server)
+            .start(&tracer);
+
     span.set_attribute(KeyValue::new("http.method", "POST"));
     span.set_attribute(KeyValue::new(
         "http.url",
-        "http://127.0.0.1:8083/matrix_result",
+        "http://127.0.0.1:8081/multiply",
     ));
     span.set_attribute(KeyValue::new("http.status", 200));
 
@@ -98,7 +103,7 @@ fn get_resource() -> Resource {
     RESOURCE
         .get_or_init(|| {
             Resource::builder()
-                .with_service_name("matrix-multplier_propgation")
+                .with_service_name("matrix_multplier_propgation")
                 .with_attribute(KeyValue::new("process.pid", std::process::id() as i64))
                 .build()
         })
