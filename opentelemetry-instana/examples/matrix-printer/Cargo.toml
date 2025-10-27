@@ -7,7 +7,7 @@ edition = "2021"
 actix-cors = { workspace = true }
 actix-web = { workspace = true }
 opentelemetry = { workspace = true }
-opentelemetry_instana = { path = "../.." }
+opentelemetry_instana = { workspace = true }
 opentelemetry_sdk = { workspace = true }
 reqwest = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
