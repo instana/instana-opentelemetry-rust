@@ -75,7 +75,7 @@ fn test_serialize() {
                             "resource": {
                                 "telemetry.sdk.language": "rust",
                                 "telemetry.sdk.name": "opentelemetry",
-                                "telemetry.sdk.version": "0.29.0"
+                                "telemetry.sdk.version": "0.30.0"
                             }
                         }
                     },
