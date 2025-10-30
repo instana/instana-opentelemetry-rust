@@ -34,7 +34,6 @@ Example:
 ERROR=1
 SUCCESS=0
 SUCCESS_MSG="*** EXECUTION SUCCESSFUL ***"
-VERSION_FILE="VERSION"
 
 if [ $# -lt 1 ]; then
   echo "${USAGE}"
@@ -65,6 +64,7 @@ fi
 
 # Source dryrun functions
 SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
+VERSION_FILE="$(realpath ${SCRIPT_DIR}/..)/opentelemetry-instana/VERSION"
 export DRYRUN
 . "${SCRIPT_DIR}/utils.sh"
 
@@ -72,6 +72,10 @@ printf "\
 #############################################################
 ### USING VERSION %-6s DRYRUN %-2s
 #############################################################\n\n" "${VERSION}" "$DRYRUN"
+
+if [ -f "${VERSION_FILE}" ]; then
+  echo "Error: version file ${VERSION_FILE} doesn't exist. Exit here."
+fi
 
 echo -e "Exporting variable\n VERSION:\"${VERSION}\"\n"
 export VERSION
