@@ -9,3 +9,6 @@ Cargo.lock
 .cosine
 
 opentelemetry-otlp/tests/integration_test/result.json
+
+cra-bom-report.json
+.cra
