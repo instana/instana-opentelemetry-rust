@@ -4,12 +4,10 @@ Welcome to the documentation for the Instana exporter for OpenTelemetry in Rust.
 
 ## Table of Contents
 
-- [Getting Started](getting_started.md)
 - [Exporter](exporter.md)
 - [Propagation](propagation.md)
 - [Serialization](serialization.md)
 - [Examples](examples.md)
-- [API Reference](api_reference.md)
 
 ## Overview
 
@@ -34,7 +32,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-opentelemetry_instana = "1.0.0"
+opentelemetry_instana =  { path = "<path-to-the-opentelemetry-instana>" }
 ```
 
 ## Basic Usage
