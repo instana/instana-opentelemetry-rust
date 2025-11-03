@@ -2039,20 +2039,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "47e1ffaa40ddd1f3ed91f717a33c8c0ee23fff369e3aa8772b9605cc1d22f4c3"
 
 [[package]]
-name = "matrix-printer"
-version = "1.0.0"
-dependencies = [
- "actix-cors",
- "actix-web",
- "opentelemetry",
- "opentelemetry_instana",
- "opentelemetry_sdk",
- "reqwest",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "matrix_multiplication"
 version = "1.0.0"
 dependencies = [
@@ -2066,6 +2052,20 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
+]
+
+[[package]]
+name = "matrix_printer"
+version = "1.0.0"
+dependencies = [
+ "actix-cors",
+ "actix-web",
+ "opentelemetry",
+ "opentelemetry_instana",
+ "opentelemetry_sdk",
+ "reqwest",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
