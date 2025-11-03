@@ -1,5 +1,5 @@
 [package]
-name = "matrix-printer"
+name = "matrix_printer"
 version = "1.0.0"
 edition = "2021"
 
