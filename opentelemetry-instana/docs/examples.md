@@ -138,8 +138,8 @@ To create your own example:
    ```toml
    [dependencies]
    opentelemetry_instana = { path = "../.." }
-   opentelemetry = { version = "0.20.0", features = ["trace"] }
-   opentelemetry_sdk = { version = "0.20.0", features = ["trace", "rt-tokio"] }
+   opentelemetry = { workspace = true, features = ["trace"]}
+   opentelemetry_sdk = { workspace = true, features = ["trace"] }
    ```
 
 3. Create your application with the following key components:
