@@ -15,5 +15,5 @@ serde_json = { workspace = true }
 
 # Single binary target
 [[bin]]
-name = "matrix-printer"
+name = "matrix_printer"
 path = "src/main.rs"
