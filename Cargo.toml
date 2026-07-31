@@ -92,6 +92,8 @@ wiremock = "0.6.3"
 opentelemetry = { path = "opentelemetry" }
 opentelemetry_sdk = { path = "opentelemetry-sdk" }
 opentelemetry-stdout = { path = "opentelemetry-stdout" }
+# CVE-2026-25800: quinn-proto < 0.11.15 is vulnerable to a memory safety issue.
+quinn = { git = "https://github.com/quinn-rs/quinn", tag = "quinn-0.11.11" }
 
 [workspace.lints.rust]
 rust_2024_compatibility = { level = "warn", priority = -1 }
